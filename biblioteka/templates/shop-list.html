@@ -1,0 +1,93 @@
+{% extends '__base__.html' %}
+{% block title %}List of books{% endblock %}
+{% block content %}
+        <div class="row border-bottom border-3 p-1 m-1">
+            <div class="col noPadding"><h3 class="color-header text-uppercase">Lista
+                Książek</h3></div>
+            <div class="col-5 d-flex mb-2 noPadding">
+                <a href="//" class="btn btn-warning rounded-0 pt-0 pb-0 pr-4 pl-4">Dodaj książkę</a>
+            </div>
+            <div class="col noPadding d-flex justify-content-end mb-2"><a
+                    href="//"
+                    class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4">Dodaj
+                plan</a></div>
+        </div>
+            <table class="table border-bottom schedules-content">
+                <thead>
+                <tr class="d-flex text-color-darker">
+                    <th scope="col" class="col-1">ID</th>
+                    <th scope="col" class="col-1">CENA I</th>
+                    <th scope="col" class="col-1">CENA II</th>
+                    <th scope="col" class="col-1">CENA III</th>
+                    <th scope="col" class="col-3">TYTUŁ</th>
+                    <th scope="col" class="col-4">AUTOR</th>
+                    <th scope="col" class="col-2 center">AKCJE</th>
+                </tr>
+                </thead>
+                <tbody class="text-color-lighter">
+                {% for book in books %}
+                    <tr class="d-flex">
+                        <th scope="row" class="col-1">{{ book.id }}</th>
+                        <td class="col-1">
+                            {{book.empik_price}}
+                        </td>
+                        <td class="col-1">
+                            {{book.tania_ksiazka_price}}
+                        </td>
+                        <td class="col-1">
+                            {{book.swiat_ksiazki_price}}
+                        </td>
+                        <td class="col-3">{{ book.title }}
+                        </td>
+                        <td class="col-3">{{ book.author }}
+                        </td>
+                        <td class="col-3 d-flex align-items-center justify-content-center flex-wrap">
+                            <a href="#"
+                               class="btn btn-danger rounded-0 text-light m-1">Usuń</a>
+                            <a href="//"
+                               class="btn btn-info rounded-0 text-light m-1">Kupiona</a>
+                            <a href="//"
+                               class="btn btn-warning rounded-0 text-light m-1">Zobacz sklepy</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <style>
+                .pagination {
+                    display: flex;
+                    align-items: center;
+                }
+
+                .pagination a, .pagination span {
+                    padding: 5px 10px;
+                    text-decoration: none;
+                    color: black;
+                    border: 1px solid #ccc;
+                }
+
+                .pagination a.current {
+                    font-weight: bold;
+                    background-color: #ccc;
+                }
+            </style>
+            <div class="pagination">
+                {% if books.has_previous %}
+                    <a href="?page={{ books.previous_page_number }}">« poprzednia</a>
+                {% endif %}
+
+                {% for num in books.paginator.page_range %}
+                    {% if num == books.number %}
+                        <span class="current">{{ num }}</span>
+                    {% else %}
+                        <a href="?page={{ num }}">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if books.has_next %}
+                    <a href="?page={{ books.next_page_number }}">następna »</a>
+                {% endif %}
+            </div>
+
+
+{% endblock %}
