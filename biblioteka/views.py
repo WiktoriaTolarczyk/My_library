@@ -1,17 +1,19 @@
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage
-from django.shortcuts import render
+from django.shortcuts import render, redirect, HttpResponse
 from django.views import View
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse_lazy
-from .models import MyBook, BooksToBuy, Library, LibraryBooks
+from .models import MyBook, BooksToBuy, Library, LibraryBooks, MONTHS, get_author_rate, ReadingPlanA, PlanBooks
+from django.core.exceptions import ObjectDoesNotExist
 from .forms import (
     AddBookForm,
     LoginUserForm,
     AddUserForm,
     AddLibBookForm,
+    AddPlanForm,
 )
 
 # Create your views here.
@@ -153,19 +155,21 @@ class ShoppingListView(View):
     
 class LibraryListView(View):
     def get(self, request):
-        library = Library.objects.all().order_by('lib_name')
+        library = Library.objects.all().order_by('lib_name').distinct('lib_name')
+        books = Library.objects.all().order_by('lib_name')
         paginator = Paginator(library, 5)
         page = request.GET.get('page')
         library = paginator.get_page(page)
         ctx = {
             "libraries" : library,
+            "books" : books,
         }
         return render(request, 'lib_list.html', context=ctx)
     
 class AddLibBookView(View):
     def get(self, request):
         form = AddLibBookForm()
-        return render(request, 'add_Libbook_form.html', {'form': form})
+        return render(request, 'add_Libbok_form.html', {'form': form})
     def post(self, request):
         form = AddLibBookForm(request.POST)
         if form.is_valid():
@@ -176,7 +180,7 @@ class AddLibBookView(View):
             status = form.cleaned_data['status']
             rating = form.cleaned_data['rating']
             review = form.cleaned_data['review']
-            user = User.objects.get(user=request.user)
+            user = User.objects.get(username=request.user.username)
 
             book = MyBook.objects.create(user=user,
                                          title=title,
@@ -195,19 +199,19 @@ class AddLibBookView(View):
                                                   plan_return_date=plan_return_date)
             
             lib_name = form.cleaned_data['lib_name']
-            
+
             try:
-                library = Library.books.get(lib_name=lib_name)
-            except library.DoesNotExist:
+                library = Library.objects.get(lib_name=lib_name)
+            except ObjectDoesNotExist:
                 library = None
             if library is not None:
-                library.objects.add(libBook)
+                library = Library.objects.create(books=libBook, lib_name=lib_name)
                 mass = 'Biblioteka użytkownika istnieje już w bazie danych, obiekt został dodany'
                 ctx = {
                     'message': mass,
                     'form': form,
                 }
-                return render(request, 'add_library.html', context=ctx)
+                return render(request, 'add_Libbok_form.html', context=ctx)
             else:
                 library = Library.objects.create(books=libBook, lib_name=lib_name)
             message = 'Gratulacje! Biblioteka została dodana! Możesz dodać następną.'
@@ -215,12 +219,122 @@ class AddLibBookView(View):
                 'message': message,
                 'form': form,
             }
-            return render(request, 'add_libary_form.html', context=ctx)
+            return render(request, 'add_Libbok_form.html', context=ctx)
     
 class RankingView(View):
     def get(self, request):
-        return render(request, 'ranking.html')
+        books = MyBook.objects.all().order_by('-rating')
+        books_ = MyBook.objects.all().order_by('-rating')[:5]
+        rating = []
+        for book in books_:
+            rating.append(float(str(book.rating).replace(',','.')))
+        paginator = Paginator(books, 10)
+        page = request.GET.get('page')
+        books = paginator.get_page(page)
+        ctx = {
+            "books": books,
+            "books_": books_,
+            "ratings": rating,
+        }
+        return render(request, 'rating.html', context=ctx)
     
 class StatisticsView(View):
     def get(self, request):
-        return render(request, 'statistics.html')
+        books = MyBook.objects.filter(status=3)
+        number = []
+        for i in range(12):
+            number += [books.filter(date_of_buy__month = i).count()]
+
+        library = Library.objects.all().order_by('lib_name').distinct('lib_name')
+        lib_names = []
+        lib_counts = []
+        for lib in library:
+            lib_names += [lib.lib_name]
+            lib_counts += [Library.objects.filter(lib_name = lib.lib_name).count()]
+
+        authors = MyBook.objects.all().order_by('author').distinct('author')
+        data = []
+        list = []
+        for i in range(len(authors)):
+            data.append(MyBook.objects.filter(author = authors[i].author).count())
+            list.append(i)
+        author = []
+        num = []
+        for _ in range(5):
+            author.append(authors[list[data.index(max(data))]].author)
+            num.append(max(data))
+            list.remove(list[data.index(max(data))])
+            data.remove(max(data))
+        indexes = []
+        for k in range(5):
+            indexes.append(k)
+        ctx = {
+            "number": number,
+            "months": MONTHS,
+            "lib_name": lib_names,
+            "lib_count": lib_counts,
+            "authors": author,
+            "num_book": num,
+
+        }
+        return render(request, 'stat.html', context=ctx)
+
+class ReadingPlanAddView(View):
+    def get(self, request):
+        form = AddPlanForm()
+        return render(request, 'add_plan_form.html', {'form': form})
+    def post(self, request):
+        form = AddPlanForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['plan_name']
+            description = form.cleaned_data['description']
+            goal = form.cleaned_data['goal']
+            plan = ReadingPlanA.objects.create(plan_name=name,
+                                              details=description,
+                                              goal=goal)
+            return redirect('/plan/' + str(plan.id))
+
+class AddBookToPlanView(View):
+    def get(self, request):
+        plans = ReadingPlanA.objects.all()
+        books = MyBook.objects.all()
+        ctx = {
+            'plans': plans,
+            'books': books
+        }
+        return render(request, "add_book_to_plan.html", context=ctx)
+    def post(self, request):
+        plan_name = request.POST.get("plan_name")
+        book = request.POST.get("book")
+        is_read = request.POST.get("book_read")
+
+        if plan_name and book and is_read:
+            plan = ReadingPlanA.objects.get(plan_name = plan_name)
+            book = MyBook.objects.get(title = book)
+            if is_read == 'True':
+                is_read = True
+            else:
+                is_read = False
+            PlanBooks.objects.create(reading_plan=plan, book=book, is_read=is_read)
+            return redirect(f"/plan/{plan.pk}")
+        else:
+            message = 'Wypełnij poprawnie wszystkie pola'
+
+        return render(request, "app-schedules-meal-recipe.html", {'message': message})
+
+class ReadingPlanDetailView(View):
+    def get(self, request, id):
+        plans_count = ReadingPlanA.objects.count()
+        if id in [i for i in range(1, plans_count + 1)]:
+            plans = ReadingPlanA.objects.all()
+            plan = plans[id - 1]
+            read_books = PlanBooks.objects.filter(reading_plan=plan, is_read=True)
+            rest_books = PlanBooks.objects.filter(reading_plan=plan, is_read=False)
+            context = {
+                'plan' : plan,
+                'read_book' : read_books,
+                'rest_book' : rest_books,
+                'all_books' : PlanBooks.objects.filter(reading_plan=plan).count(),
+                'read_bookss' : PlanBooks.objects.filter(reading_plan=plan, is_read=True).count()
+            }
+            return render(request, "plan_details.html", context=context)

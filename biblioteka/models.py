@@ -9,6 +9,24 @@ STATUS = (
     (3, "Przeczytana"),
 )
 
+MONTHS = [
+    'Styczeń',
+    'Luty',
+    'Marzec',
+    'Kwiecień',
+    'Maj',
+    'Czerwiec',
+    'Lipiec',
+    'Sierpień',
+    'Wrzesień',
+    'Październik',
+    'Listopad',
+    'Grudzień'
+]
+
+def get_author_rate(ratings, book_number, most_popular_book_num):
+    return 0.6 * sum(ratings)/(len(ratings)*10) + 0.4*book_number/most_popular_book_num
+
 # class User(models.Model):
 #     name = models.CharField(max_length=128)
 #     surname = models.CharField(max_length=128)
@@ -51,12 +69,13 @@ class Library(models.Model):
     def __str__(self):
         return self.name
 
-class ReadingPlan(models.Model):
-    books = models.ManyToManyField(MyBook, related_name='books')
+
+
+class ReadingPlanA(models.Model):
+    books = models.ManyToManyField(MyBook, through="PlanBooks", related_name='books')
     plan_name = models.CharField(max_length=64)
     details = models.TextField()
     goal = models.IntegerField(null = True)
-    read_books = []
 
     @property
     def name(self):
@@ -64,15 +83,12 @@ class ReadingPlan(models.Model):
 
     def __str__(self):
         return self.name
-    
-    def add_read_book(self, book):
-        self.read_books.append(book)
 
-    def show_read_book(self, book):
-        if book in self.read_books:
-            return self.read_books
-        else:
-            return []
+class PlanBooks(models.Model):
+    reading_plan = models.ForeignKey(ReadingPlanA ,on_delete=models.CASCADE)
+    book = models.ForeignKey(MyBook,  on_delete=models.CASCADE)
+    is_read = models.BooleanField()
+
     
 class BooksToBuy(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

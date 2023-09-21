@@ -28,6 +28,11 @@ from biblioteka.views import (
     LibraryListView,
     RankingView,
     StatisticsView,
+    AddLibBookView,
+    ReadingPlanAddView,
+    AddBookToPlanView,
+    ReadingPlanDetailView
+
 )
 
 urlpatterns = [
@@ -43,5 +48,9 @@ urlpatterns = [
     path('library_list/', LibraryListView.as_view(), name='library-list'),
     path('ranking/', RankingView.as_view(), name='ranking'),
     path('statistics/', StatisticsView.as_view(), name='statistics'),
+    path('add_lib/', AddLibBookView.as_view(), name='add-lib-book'),
+    path('plan/add', ReadingPlanAddView.as_view(), name='add-plan'),
+    path('plan/add_book', AddBookToPlanView.as_view(), name='add-book-plan'),
+    path('plan/<int:id>', ReadingPlanDetailView.as_view(), name='plan-detail'),
 
 ]

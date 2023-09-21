@@ -23,25 +23,27 @@
                     </tr>
                     </thead>
                     <tbody class="text-color-lighter">
-                    {% for book in library.book %}
-                        <tr class="d-flex">
-                            <th scope="row" class="col-1">{{ book.id }}</th>
-                            <td class="col-2">
-                                {{book.book}}
-                            </td>
-                            <td class="col-3">{{ book.borrow_date }}
-                            </td>
-                            <td class="col-3">{{ book.plan_return_date }}
-                            </td>
-                            <td class="col-3 d-flex align-items-center justify-content-center flex-wrap">
-                                <a href="#"
-                                class="btn btn-danger rounded-0 text-light m-1">Usuń</a>
-                                <a href="//"
-                                class="btn btn-info rounded-0 text-light m-1">Oddana</a>
-                                <a href="//"
-                                class="btn btn-warning rounded-0 text-light m-1">Przedłużona</a>
-                            </td>
-                        </tr>
+                    {% for book in books %}
+                        {% if book.lib_name == library.lib_name %}
+                            <tr class="d-flex">
+                                <th scope="row" class="col-1">{{ book.books.id }}</th>
+                                <td class="col-2">
+                                    {{book.books.book}}
+                                </td>
+                                <td class="col-3">{{ book.books.borrow_date }}
+                                </td>
+                                <td class="col-3">{{ book.books.plan_return_date }}
+                                </td>
+                                <td class="col-3 d-flex align-items-center justify-content-center flex-wrap">
+                                    <a href="#"
+                                    class="btn btn-danger rounded-0 text-light m-1">Usuń</a>
+                                    <a href="//"
+                                    class="btn btn-info rounded-0 text-light m-1">Oddana</a>
+                                    <a href="//"
+                                    class="btn btn-warning rounded-0 text-light m-1">Przedłużona</a>
+                                </td>
+                            </tr>
+                        {% endif %}
                     {% endfor %}
                     </tbody>
                 </table>

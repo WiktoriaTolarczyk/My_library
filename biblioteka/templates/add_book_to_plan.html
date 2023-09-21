@@ -1,0 +1,60 @@
+{% extends '__base__.html' %}
+{% block title %}Add Book{% endblock %}
+{% block content %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="row border-bottom border-3 p-1 m-1">
+            <div class="col noPadding"><h3 class="color-header text-uppercase">Dodaj książkę do planu</h3></div>
+    <!--        <div class="col-5 d-flex mb-2 noPadding">-->
+    <!--            <a href="//" class="btn btn-warning rounded-0 pt-0 pb-0 pr-4 pl-4">Lista wszystkich książek</a>-->
+    <!--        </div>-->
+            <div class="col d-flex justify-content-end mb-2 noPadding">
+                        <button type="submit" class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4">Zapisz</button>
+            </div>
+        </div>
+        {% if message %}
+            <div class="alert alert-success mt-4 ml-4 mr-4" role="alert">
+                {{ message }}
+            </div>
+        {% endif %}
+        <div>
+            <div class="form-group row">
+                <label for="choosePlan"
+                       class="col-sm-2 label-size col-form-label">
+                    Wybierz plan
+                </label>
+                <div class="col-sm-3">
+                    <select class="form-control" id="choosePlan" name="plan_name">
+                        {% for plan in plans %}
+                            <option>{{ plan.plan_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="books" class="col-sm-2 label-size col-form-label">
+                    Książka
+                </label>
+                <div class="col-sm-4">
+                    <select class="form-control" id="book_n" name="book">
+                        {% for book in books %}
+                            <option>{{ book.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                  <label for="books_read" class="col-sm-2 label-size col-form-label">
+                      Czy przeczytana?
+                  </label>
+                  <div class="col-sm-4">
+                      <select class="form-control" id="book_read" name="book_read">
+                              <option>True</option>
+                              <option>False</option>
+                      </select>
+                  </div>
+              </div>
+        </div>
+    </form>
+
+{% endblock %}

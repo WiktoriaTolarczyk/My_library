@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, STATUS
+from .models import User, STATUS, MyBook
 from datetime import datetime, timedelta
 
 
@@ -35,3 +35,8 @@ class AddLibBookForm(forms.Form):
     review = forms.CharField(widget=forms.Textarea, label="Recenzja", initial="To be add")
     plan_return_date = forms.DateField(label="Data zwrotu", initial=datetime.now()+timedelta(days=30))
     lib_name = forms.CharField(label="Nazwa biblioteki")
+
+class AddPlanForm(forms.Form):
+    plan_name = forms.CharField(label="Nazwa planu")
+    description = forms.CharField(widget=forms.Textarea, label="Opis planu", initial="To be add")
+    goal = forms.IntegerField(label="Cel")
