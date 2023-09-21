@@ -218,3 +218,12 @@ border-bottom-right-radius: .3rem;
 .dashboard-content-title span {
   color: var(--link-color);
 }
+.charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-row: 30% 30%
+}
+
+.myChart1 {
+  width: 20px;
+}

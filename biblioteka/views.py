@@ -14,6 +14,7 @@ from .forms import (
     AddUserForm,
     AddLibBookForm,
     AddPlanForm,
+    AddBookToBuy,
 )
 
 # Create your views here.
@@ -31,7 +32,7 @@ class AddBookView(View):
             status = form.cleaned_data['status']
             rating = form.cleaned_data['rating']
             review = form.cleaned_data['review']
-            user = User.objects.get(user=request.user)
+            user = User.objects.get(username=request.user.username)
             book = MyBook.objects.create(user=user,
                                          title=title,
                                          author=author,
@@ -143,7 +144,7 @@ class LandingPageView(View):
     
 class ShoppingListView(View):
     def get(self, request):
-        books = BooksToBuy.objects.all().order_by('title')
+        books = BooksToBuy.objects.filter(book_status=2).order_by('title')
         paginator = Paginator(books, 50)
         page = request.GET.get('page')
         books = paginator.get_page(page)
@@ -328,13 +329,54 @@ class ReadingPlanDetailView(View):
         if id in [i for i in range(1, plans_count + 1)]:
             plans = ReadingPlanA.objects.all()
             plan = plans[id - 1]
-            read_books = PlanBooks.objects.filter(reading_plan=plan, is_read=True)
-            rest_books = PlanBooks.objects.filter(reading_plan=plan, is_read=False)
+            read_books = PlanBooks.objects.filter(reading_plan = plan, is_read=True)
+            books = []
+            for i in range(len(read_books)):
+                books.append(read_books[i].book)
+            rest_books = PlanBooks.objects.filter(reading_plan = plan, is_read=False)
+            if PlanBooks.objects.filter(reading_plan = plan).count() != 0:
+                num = int(read_books.count()/PlanBooks.objects.filter(reading_plan = plan).count() * 100)
+            else:
+                num = 0
             context = {
                 'plan' : plan,
-                'read_book' : read_books,
+                'read_book' : books,
                 'rest_book' : rest_books,
-                'all_books' : PlanBooks.objects.filter(reading_plan=plan).count(),
-                'read_bookss' : PlanBooks.objects.filter(reading_plan=plan, is_read=True).count()
+                'all_books' : num,
+                'percent': num
+
             }
             return render(request, "plan_details.html", context=context)
+
+class AddBookToBuyView(View):
+    def get(self, request):
+        form = AddBookToBuy()
+        return render(request, 'add_book_to_buy_form.html', {'form': form})
+
+    def post(self, request):
+        form = AddBookToBuy(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            author = form.cleaned_data['author']
+            publisher = form.cleaned_data['publisher']
+            date_of_buy = form.cleaned_data['update_date']
+            status = 2
+            empik = form.cleaned_data['empik']
+            tania = form.cleaned_data['tania_ksiazka']
+            swiat = form.cleaned_data['swiat_ksiazki']
+            user = User.objects.get(username=request.user.username)
+            book = BooksToBuy.objects.create(user=user,
+                                         title=title,
+                                         author=author,
+                                         publisher=publisher,
+                                         update_date=date_of_buy,
+                                         book_status=status,
+                                         empik_price=empik,
+                                         tania_ksiazka_price=tania,
+                                         swiat_ksiazki_price=swiat)
+            message = 'Gratulacje! książka została dodana! Możesz dodać następną.'
+            ctx = {
+                'message': message,
+                'form': form,
+            }
+            return render(request, 'add_book_to_buy_form.html', context=ctx)

@@ -9,6 +9,18 @@ STATUS = (
     (3, "Przeczytana"),
 )
 
+STATUS_BUY = (
+    (1, "Kupiona"),
+    (2, "Niekupiona")
+)
+
+SHOP = (
+    (1, "Null"),
+    (2, "Empik"),
+    (3, "Tania książka"),
+    (4, "Świat książki")
+)
+
 MONTHS = [
     'Styczeń',
     'Luty',
@@ -99,6 +111,8 @@ class BooksToBuy(models.Model):
     empik_price = models.FloatField()
     tania_ksiazka_price = models.FloatField()
     swiat_ksiazki_price = models.FloatField()
+    book_status = models.IntegerField(choices=STATUS_BUY, default=2)
+    book_shop = models.IntegerField(choices=SHOP, default=1)
 
     @property
     def name(self):

@@ -31,7 +31,8 @@ from biblioteka.views import (
     AddLibBookView,
     ReadingPlanAddView,
     AddBookToPlanView,
-    ReadingPlanDetailView
+    ReadingPlanDetailView,
+    AddBookToBuyView
 
 )
 
@@ -52,5 +53,5 @@ urlpatterns = [
     path('plan/add', ReadingPlanAddView.as_view(), name='add-plan'),
     path('plan/add_book', AddBookToPlanView.as_view(), name='add-book-plan'),
     path('plan/<int:id>', ReadingPlanDetailView.as_view(), name='plan-detail'),
-
+    path('add_book_buy', AddBookToBuyView.as_view(), name='add-book-buy'),
 ]

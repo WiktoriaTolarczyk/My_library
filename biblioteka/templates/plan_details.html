@@ -7,7 +7,7 @@
                 <a href="//" class="btn btn-warning rounded-0 pt-0 pb-0 pr-4 pl-4">Dodaj książkę</a>
             </div>
             <div class="progress col d-flex justify-content-end mb-2 noPadding">
-              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="{{read_bookss}}" aria-valuemax="{{ all_books }}" style="width: 75%"></div>
+              <div class="progress-bar" role="progressbar" style="width: {{ percent }}%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">{{all_books}}%</div>
             </div>
         </div>
         <div>
@@ -45,15 +45,15 @@
               </tr>
               </thead>
               <tbody class="text-color-lighter">
-              {% for book in read_books %}
+              {% for book in read_book %}
                   <tr class="d-flex">
-                      <th scope="row" class="col-1">{{ book.book.id }}</th>
+                      <th scope="row" class="col-1">{{ book.id }}</th>
                       <td class="col-2">
                         {{book.rating}}/10
                       </td>
-                      <td class="col-3">{{ book.book.title }}
+                      <td class="col-3">{{ book.title }}
                       </td>
-                      <td class="col-3">{{ book.book.author }}
+                      <td class="col-3">{{ book.author }}
                       </td>
                       <td class="col-3 d-flex align-items-center justify-content-center flex-wrap">
                           <a href="#"
@@ -81,15 +81,15 @@
               </tr>
               </thead>
               <tbody class="text-color-lighter">
-              {% for book in rest_books %}
+              {% for book in rest_book %}
                   <tr class="d-flex">
-                      <th scope="row" class="col-1">{{ book.book.book.id }}</th>
+                      <th scope="row" class="col-1">{{ book.id }}</th>
                       <td class="col-2">
                         {{book.rating}}/10
                       </td>
-                      <td class="col-3">{{ book.book.book.title }}
+                      <td class="col-3">{{ book.title }}
                       </td>
-                      <td class="col-3">{{ book.book.book.author }}
+                      <td class="col-3">{{ book.author }}
                       </td>
                       <td class="col-3 d-flex align-items-center justify-content-center flex-wrap">
                           <a href="#"

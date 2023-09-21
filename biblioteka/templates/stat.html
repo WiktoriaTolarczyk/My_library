@@ -4,11 +4,18 @@
         <div class="row border-bottom border-3 p-1 m-1">
             <div class="col noPadding"><h3 class="color-header text-uppercase">Statystyki</h3></div>
         </div>
-            <div class="col-md-8">
-                <div>
-                    <canvas id="myChart1" ></canvas>
-                    <canvas id="myChart" width="20" height="20"></canvas>
-                    <canvas id="myChart2" width="20" height="20"></canvas>
+            <div class="col-md-12">
+                <div class="charts" style="display: flex; flex-wrap: wrap; width: auto; justify-content: center" >
+                    <div style="width: 100%">
+                    <canvas id="myChart1" class="myChart1"></canvas>
+                        </div>
+                    <div style="width: 50%">
+                    <canvas id="myChart" class="myChart" style="width: auto">></canvas>
+                        </div>
+                        <div style="width: 50%">
+                    <canvas id="myChart2" class="myChart1"></canvas>
+                        </div>
+
                 </div>
 
                 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

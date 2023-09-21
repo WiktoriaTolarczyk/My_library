@@ -40,3 +40,12 @@ class AddPlanForm(forms.Form):
     plan_name = forms.CharField(label="Nazwa planu")
     description = forms.CharField(widget=forms.Textarea, label="Opis planu", initial="To be add")
     goal = forms.IntegerField(label="Cel")
+
+class AddBookToBuy(forms.Form):
+    title = forms.CharField(label="Tytuł")
+    author = forms.CharField(label="Autor")
+    publisher = forms.CharField(label="Wydawnictwo")
+    update_date = forms.DateField(label="Data aktualizacji cen", initial=datetime.now())
+    empik = forms.FloatField(label="Cena w Empiku")
+    tania_ksiazka = forms.FloatField(label="Cena w Taniej książce")
+    swiat_ksiazki = forms.FloatField(label="Cena w Świecie książki")
