@@ -1,4 +1,4 @@
-{% extends '__base__.html' %}
+{% extends 'base_not_logged.html' %}
 {% block title %}Add User{% endblock %}
 {% block content %}
     <form action="{% url 'add-user' %}" method="POST">

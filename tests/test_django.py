@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 
 @pytest.mark.django_db
-def test_add_book_view():
+def test_add_book_view_1():
     user = User.objects.create_user(username='testuser', password='testpassword')
     client = Client()
     client.login(username='testuser', password='testpassword')
@@ -26,12 +26,33 @@ def test_add_book_view():
     }
     response_post = client.post(reverse('add-book'), data=form_data)
     assert response_post.status_code == 200
+
+    user.delete()
+
+@pytest.mark.django_db
+def test_add_book_view_2():
+    user = User.objects.create_user(username='testuser', password='testpassword')
+    client = Client()
+    client.login(username='testuser', password='testpassword')
+    response_get = client.get(reverse('add-book'))
+    assert response_get.status_code == 200
+
+    form_data = {
+        'title': 'Test Book',
+        'author': 'Test Author',
+        'publisher': 'Test Publisher',
+        'date_of_buy': '2023-09-22',
+        'status': 1,
+        'rating': 5,
+        'review': 'Test review',
+    }
+    response_post = client.post(reverse('add-book'), data=form_data)
     assert MyBook.objects.filter(title='Test Book').exists()
 
     user.delete()
 
 @pytest.mark.django_db
-def test_login_user_view():
+def test_login_user_view_1():
     username = 'testuser'
     password = 'testpassword'
     user = User.objects.create_user(username=username, password=password)
@@ -45,12 +66,50 @@ def test_login_user_view():
     }
     response_post = client.post(reverse('login-user'), data=form_data)
     assert response_post.status_code == 200
+
+    user.delete()
+
+@pytest.mark.django_db
+def test_login_user_view_2():
+    username = 'testuser'
+    password = 'testpassword'
+    user = User.objects.create_user(username=username, password=password)
+    client = Client()
+    response_get = client.get(reverse('login-user'))
+    assert response_get.status_code == 200
+
+    form_data = {
+        'username': username,
+        'password': password,
+    }
+    response_post = client.post(reverse('login-user'), data=form_data)
     assert response_post.context['user'].is_authenticated
 
     user.delete()
 
 @pytest.mark.django_db
-def test_book_list_view():
+def test_book_list_view_1():
+    user = User.objects.create_user(username='testuser', password='testpassword')
+    client = Client()
+    client.login(username='testuser', password='testpassword')
+
+    MyBook.objects.create(user=user,
+                        title=f'Test Book',
+                        author=f'Test Author',
+                        publisher=f'Test Publisher',
+                        date_of_buy='2023-09-21',
+                        status=1,
+                        rating=5,
+                        review=f'Test review')
+
+    response = client.get(reverse('book-list'))
+    assert response.status_code == 200
+
+    user.delete()
+    MyBook.objects.filter(title='Test Book').delete()
+
+@pytest.mark.django_db
+def test_book_list_view_2():
     user = User.objects.create_user(username='testuser', password='testpassword')
     client = Client()
     client.login(username='testuser', password='testpassword')
@@ -66,7 +125,6 @@ def test_book_list_view():
                             review=f'Test review {i}')
 
     response = client.get(reverse('book-list'))
-    assert response.status_code == 200
     assert len(response.context['books']) == 10
 
     user.delete()

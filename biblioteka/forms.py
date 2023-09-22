@@ -1,10 +1,11 @@
 from django import forms
-from .models import User, STATUS, MyBook
+from .models import User, STATUS, MyBook, SHOP
 from datetime import datetime, timedelta
 
 
 
 class AddBookForm(forms.Form):
+    """Form used to get data to create MyBook object."""
     title = forms.CharField(label="Tytuł")
     author = forms.CharField(label="Autor")
     publisher = forms.CharField(label="Wydawnictwo")
@@ -14,10 +15,12 @@ class AddBookForm(forms.Form):
     review = forms.CharField(widget=forms.Textarea, label="Recenzja", initial="To be add")
 
 class LoginUserForm(forms.Form):
+    """Form used to get data to login user."""
     username = forms.CharField(label="Podaj nazwę użytkownika", max_length=64)
     password = forms.CharField(label="Podaj haslo", max_length= 64, widget=forms.PasswordInput())
 
 class AddUserForm(forms.Form):
+    """Form used to get data to register user."""
     login = forms.CharField(label="Login")
     password = forms.CharField(label="Podaj haslo", max_length=64, widget=forms.PasswordInput())
     rep_pass = forms.CharField(label="Podaj haslo", max_length=64, widget=forms.PasswordInput())
@@ -26,6 +29,7 @@ class AddUserForm(forms.Form):
     mail = forms.CharField(label="Email", max_length=64, widget=forms.EmailInput())
 
 class AddLibBookForm(forms.Form):
+    """Form used to get data to create MyBook, LibraryBooks, Library objects."""
     title = forms.CharField(label="Tytuł")
     author = forms.CharField(label="Autor")
     publisher = forms.CharField(label="Wydawnictwo")
@@ -37,11 +41,13 @@ class AddLibBookForm(forms.Form):
     lib_name = forms.CharField(label="Nazwa biblioteki")
 
 class AddPlanForm(forms.Form):
+    """Form used to create ReadingPlanA object."""
     plan_name = forms.CharField(label="Nazwa planu")
     description = forms.CharField(widget=forms.Textarea, label="Opis planu", initial="To be add")
     goal = forms.IntegerField(label="Cel")
 
 class AddBookToBuy(forms.Form):
+    """Form used to create BooksToBuy object."""
     title = forms.CharField(label="Tytuł")
     author = forms.CharField(label="Autor")
     publisher = forms.CharField(label="Wydawnictwo")
@@ -49,3 +55,12 @@ class AddBookToBuy(forms.Form):
     empik = forms.FloatField(label="Cena w Empiku")
     tania_ksiazka = forms.FloatField(label="Cena w Taniej książce")
     swiat_ksiazki = forms.FloatField(label="Cena w Świecie książki")
+
+class ChooseShopForm(forms.Form):
+    """Form used to choose the store where the book was purchased."""
+    shop = forms.ChoiceField(label="Wybierz sklep", choices=SHOP)
+    price = forms.FloatField(label="Podaj cenę")
+
+class PostponeReturnForm(forms.Form):
+    """Form used to postpone return date of borrowed books."""
+    return_date = forms.DateField(label="Nowa data zwrotu", initial=datetime.now()+timedelta(days=30))

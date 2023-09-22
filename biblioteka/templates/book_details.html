@@ -1,0 +1,155 @@
+{% extends '__base__.html' %}
+{% block title %}Books to buy{% endblock %}
+{% block content %}
+        <div class="row border-bottom border-3 p-1 m-1">
+            <div class="col noPadding"><h3 class="color-header text-uppercase">{{book}}</h3></div>
+            <div class="col-5 d-flex mb-2 noPadding">
+                <a href="//" class="btn btn-warning rounded-0 pt-0 pb-0 pr-4 pl-4">Edytuj</a>
+            </div>
+        </div>
+        <div>
+            <div class="header">
+                <div class="form-group row">
+                                    <span class="col-sm-2 label-size col-form-label">
+                                        Wydawnictwo
+                                    </span>
+                    <div class="col-sm-10">
+                        <p class="schedules-text">{{ book.publisher }}</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                                    <span class="col-sm-2 label-size col-form-label">
+                                        Status
+                                    </span>
+                    <div class="col-sm-10">
+                        <p class="schedules-text">
+                            {{ status }}
+                        </p>
+                    </div>
+                </div>
+        </div>
+        <div class="mt-5 col-md-12 ">
+            Zebrane informacje:
+        </div>
+        <div class="mt-5 col-md-12">
+            <table class="table border-bottom schedules-content">
+                <thead>
+                <tr class="d-flex text-color-darker">
+                    <th scope="col" class="col-5">NAZWA</th>
+                    <th scope="col" class="col-7">WARTOŚĆ</th>
+                </tr>
+                </thead>
+                    <tbody class="text-color-lighter">
+                        <tr class="d-flex">
+                            <td class="col-5">
+                                Data nabycia
+                            </td>
+                            <td class="col-7">
+                                {{book.date_of_buy}}
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody class="text-color-lighter">
+                        <tr class="d-flex">
+                            <td class="col-5">
+                                Ocena fabuły
+                            </td>
+                            <td class="col-7">
+                                {{book.rating}}/10
+                            </td>
+                        </tr>
+                    </tbody>
+                    {% if not in_plan %}
+                        <tbody class="text-color-lighter">
+                            <tr class="d-flex">
+                                <td class="col-5">
+                                    Plan czytelniczy
+                                </td>
+                                <td class="col-7">
+                                    Książka nie należy do żadnych planów atualnie
+                                </td>
+                            </tr>
+                        </tbody>
+                    {% else %}
+                        {% for plan in in_plan %}
+                            <tbody class="text-color-lighter">
+                                <tr class="d-flex">
+                                    <td class="col-5">
+                                        Plan czytelniczy
+                                    </td>
+                                    <td class="col-7">
+                                      {{ plan.reading_plan.plan_name }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        {% endfor %}
+                    {% endif %}
+                    {% if not from_library %}
+                        <tbody class="text-color-lighter">
+                            <tr class="d-flex">
+                                <td class="col-5">
+                                    Biblioteka
+                                </td>
+                                <td class="col-7">
+                                    Książka nie pochodzi z żadnej biblioteki
+                                </td>
+                            </tr>
+                        </tbody>
+                    {% else %}
+                        {% for lib in library %}
+                            <tbody class="text-color-lighter">
+                                <tr class="d-flex">
+                                    <td class="col-5">
+                                        Biblioteka
+                                    </td>
+                                    <td class="col-7">
+                                      {{ lib.lib_name }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody class="text-color-lighter">
+                                <tr class="d-flex">
+                                    <td class="col-5">
+                                        Data wypożyczenia
+                                    </td>
+                                    <td class="col-7">
+                                      {{ lib.books.borrow_date }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody class="text-color-lighter">
+                                <tr class="d-flex">
+                                    <td class="col-5">
+                                        Zwrócona
+                                    </td>
+                                    <td class="col-7">
+                                      {{ lib.books.returned }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        {% endfor %}
+                    {% endif %}
+                    {% if from_shop %}
+                        {% for buy in from_shop %}
+                            <tbody class="text-color-lighter">
+                                <tr class="d-flex">
+                                    <td class="col-5">
+                                        Koszt:
+                                    </td>
+                                    <td class="col-7">
+                                        {{buy.book_price}} zł
+                                    </td>
+                                </tr>
+                            </tbody>
+                        {% endfor %}
+                    {% endif %}
+            </table>
+        </div>
+        <div class="mt-5 col-md-12">
+                  RECENZJA KSIĄŻKI
+        </div>
+        <div class="mt-5 col-md-12">
+            {{ book.review }}
+        </div>
+
+{% endblock %}

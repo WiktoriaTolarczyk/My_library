@@ -53,13 +53,19 @@
                       </a>
                     </li>
                     <li>
-                      <a href="{% url 'library-list' %}" class="nav-link text-white">
+                      <a href="{% url 'library-list' %}" class="nav-link active text-white">
                         <svg class="bi me-0" width="16" height="16"><use xlink:href="{% url 'library-list' %}"></use></svg>
                         Biblioteka
                       </a>
                     </li>
                     <li>
-                      <a href="{% url 'ranking' %}" class="nav-link text-white">
+                      <a href="{% url 'plan-list' %}" class="nav-link text-white">
+                        <svg class="bi me-0" width="16" height="16"><use xlink:href="{% url 'plan-list' %}"></use></svg>
+                        Plany czytelnicze
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'ranking' %}" class="nav-link active text-white">
                         <svg class="bi me-0" width="16" height="16"><use xlink:href="{% url 'ranking' %}"></use></svg>
                         Ranking
                       </a>

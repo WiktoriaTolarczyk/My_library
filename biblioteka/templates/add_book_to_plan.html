@@ -39,6 +39,7 @@
                     <select class="form-control" id="book_n" name="book">
                         {% for book in books %}
                             <option>{{ book.title }}</option>
+                            {{book}}
                         {% endfor %}
                     </select>
                 </div>

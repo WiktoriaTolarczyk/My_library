@@ -3,43 +3,46 @@
 {% block content %}
         <div class="row border-bottom border-3 p-1 m-1">
             <div class="col noPadding"><h3 class="color-header text-uppercase">Lista
-                Książek</h3></div>
+                Planów</h3></div>
             <div class="col-5 d-flex mb-2 noPadding">
-                <a href="{% url 'add-book' %}" class="btn btn-warning rounded-0 pt-0 pb-0 pr-4 pl-4">Dodaj książkę</a>
+                <a href="{% url 'add-book' %}" class="btn btn-warning rounded-0 pt-0 pb-0 pr-4 pl-4">Lista wszystkich książek</a>
             </div>
             <div class="col noPadding d-flex justify-content-end mb-2"><a
                     href="{% url 'add-plan' %}"
-                    class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4">Dodaj
-                plan</a></div>
+                    class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4">Statystyki</a></div>
         </div>
             <table class="table border-bottom schedules-content">
                 <thead>
                 <tr class="d-flex text-color-darker">
                     <th scope="col" class="col-1">ID</th>
-                    <th scope="col" class="col-2">OCENA</th>
-                    <th scope="col" class="col-3">TYTUŁ</th>
-                    <th scope="col" class="col-4">AUTOR</th>
+                    <th scope="col" class="col-3">PLAN</th>
+                    <th scope="col" class="col-4">OPIS</th>
+                    <th scope="col" class="col-1">CEL</th>
                     <th scope="col" class="col-2 center">AKCJE</th>
                 </tr>
                 </thead>
                 <tbody class="text-color-lighter">
                 {% for book in books %}
                     <tr class="d-flex">
-                        <th scope="row" class="col-1">{{ book.id }}</th>
-                        <td class="col-2">
-                          {{book.rating}}/10
+                        <th scope="row" class="col-1">
+                          {{ book.id }}
+                        </th>
+                        <td class="col-3">
+                          {{book}}/10
                         </td>
-                        <td class="col-3">{{ book.title }}
+                        <td class="col-4">
+                          {{ book.details }}
                         </td>
-                        <td class="col-3">{{ book.author }}
+                        <td class="col-1">
+                          {{ book.goal }}
                         </td>
                         <td class="col-3 d-flex align-items-center justify-content-center flex-wrap">
-                            <a href="{% url 'delete-book-mybook' id=book.id %}"
+                            <a href="#"
                                class="btn btn-danger rounded-0 text-light m-1">Usuń</a>
-                            <a href="{% url 'book-detail' id=book.id %}"
+                            <a href="{% url 'plan-detail' id=book.id %}"
                                class="btn btn-info rounded-0 text-light m-1">Szczegóły</a>
-                            <a href="//"
-                               class="btn btn-warning rounded-0 text-light m-1">Edytuj</a>
+                            <a href="{% url 'add-book-plan' %}"
+                               class="btn btn-warning rounded-0 text-light m-1">Dodaj książkę</a>
                         </td>
                     </tr>
                 {% endfor %}

@@ -3,12 +3,12 @@
 {% block content %}
         <div class="row border-bottom border-3 p-1 m-1">
             <div class="col noPadding"><h3 class="color-header text-uppercase">Lista
-                Książek</h3></div>
+                zakupów</h3></div>
             <div class="col-5 d-flex mb-2 noPadding">
-                <a href="//" class="btn btn-warning rounded-0 pt-0 pb-0 pr-4 pl-4">Dodaj książkę</a>
+                <a href="{% url 'add-book-buy' %}" class="btn btn-warning rounded-0 pt-0 pb-0 pr-4 pl-4">Dodaj książkę</a>
             </div>
             <div class="col noPadding d-flex justify-content-end mb-2"><a
-                    href="//"
+                    href="{% url 'add-plan' %}"
                     class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4">Dodaj
                 plan</a></div>
         </div>
@@ -19,8 +19,8 @@
                     <th scope="col" class="col-1">CENA I</th>
                     <th scope="col" class="col-1">CENA II</th>
                     <th scope="col" class="col-1">CENA III</th>
-                    <th scope="col" class="col-3">TYTUŁ</th>
-                    <th scope="col" class="col-4">AUTOR</th>
+                    <th scope="col" class="col-2">TYTUŁ</th>
+                    <th scope="col" class="col-3">AUTOR</th>
                     <th scope="col" class="col-2 center">AKCJE</th>
                 </tr>
                 </thead>
@@ -37,14 +37,14 @@
                         <td class="col-1">
                             {{book.swiat_ksiazki_price}}
                         </td>
-                        <td class="col-3">{{ book.title }}
+                        <td class="col-2">{{ book.title }}
                         </td>
-                        <td class="col-3">{{ book.author }}
+                        <td class="col-2">{{ book.author }}
                         </td>
-                        <td class="col-3 d-flex align-items-center justify-content-center flex-wrap">
-                            <a href="#"
+                        <td class="col-4 d-flex align-items-center justify-content-center flex-wrap">
+                            <a href="{% url 'delete-buy' id=book.id %}"
                                class="btn btn-danger rounded-0 text-light m-1">Usuń</a>
-                            <a href="//"
+                            <a href="{% url 'book-bought' id=book.id %}"
                                class="btn btn-info rounded-0 text-light m-1">Kupiona</a>
                             <a href="//"
                                class="btn btn-warning rounded-0 text-light m-1">Zobacz sklepy</a>

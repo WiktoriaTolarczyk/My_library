@@ -4,7 +4,7 @@
         <div class="row border-bottom border-3 p-1 m-1">
             <div class="col noPadding"><h3 class="color-header text-uppercase">Szczegóły planu</h3></div>
             <div class="col-5 d-flex mb-2 noPadding">
-                <a href="//" class="btn btn-warning rounded-0 pt-0 pb-0 pr-4 pl-4">Dodaj książkę</a>
+                <a href="{% url 'add-book-plan' %}" class="btn btn-warning rounded-0 pt-0 pb-0 pr-4 pl-4">Dodaj książkę</a>
             </div>
             <div class="progress col d-flex justify-content-end mb-2 noPadding">
               <div class="progress-bar" role="progressbar" style="width: {{ percent }}%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">{{all_books}}%</div>
@@ -56,12 +56,10 @@
                       <td class="col-3">{{ book.author }}
                       </td>
                       <td class="col-3 d-flex align-items-center justify-content-center flex-wrap">
-                          <a href="#"
+                          <a href="{% url 'delete-from-plan' id_plan=plan.id id_book=book.id %}"
                              class="btn btn-danger rounded-0 text-light m-1">Usuń</a>
-                          <a href="//"
+                          <a href="{% url 'book-detail' id=book.id %}"
                              class="btn btn-info rounded-0 text-light m-1">Szczegóły</a>
-                          <a href="//"
-                             class="btn btn-warning rounded-0 text-light m-1">Edytuj</a>
                       </td>
                   </tr>
               {% endfor %}
@@ -89,15 +87,15 @@
                       </td>
                       <td class="col-3">{{ book.title }}
                       </td>
-                      <td class="col-3">{{ book.author }}
+                      <td class="col-2">{{ book.author }}
                       </td>
-                      <td class="col-3 d-flex align-items-center justify-content-center flex-wrap">
-                          <a href="#"
+                      <td class="col-4 d-flex align-items-center justify-content-center flex-wrap">
+                          <a href="{% url 'delete-from-plan' id_plan=plan.id id_book=book.id %}"
                              class="btn btn-danger rounded-0 text-light m-1">Usuń</a>
-                          <a href="//"
+                          <a href="{% url 'book-detail' id=book.id %}"
                              class="btn btn-info rounded-0 text-light m-1">Szczegóły</a>
-                          <a href="//"
-                             class="btn btn-warning rounded-0 text-light m-1">Edytuj</a>
+                          <a href="{% url 'move-to-read' id_plan=plan.id id_book=book.id %}"
+                             class="btn btn-warning rounded-0 text-light m-1">Przeczytana</a>
                       </td>
                   </tr>
               {% endfor %}

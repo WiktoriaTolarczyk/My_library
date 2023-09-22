@@ -36,8 +36,8 @@ MONTHS = [
     'Grudzień'
 ]
 
-def get_author_rate(ratings, book_number, most_popular_book_num):
-    return 0.6 * sum(ratings)/(len(ratings)*10) + 0.4*book_number/most_popular_book_num
+# def get_author_rate(ratings, book_number, most_popular_book_num):
+#     return 0.6 * sum(ratings)/(len(ratings)*10) + 0.4*book_number/most_popular_book_num
 
 # class User(models.Model):
 #     name = models.CharField(max_length=128)
@@ -46,6 +46,8 @@ def get_author_rate(ratings, book_number, most_popular_book_num):
 #     password = models.TextField()
 
 class MyBook(models.Model):
+    """Model dedicated to create book object in database.
+    It shall be used to create objects of books physically owned by the user."""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=128)
     author = models.CharField(max_length=128)
@@ -64,13 +66,18 @@ class MyBook(models.Model):
 
 
 class LibraryBooks(models.Model):
+    """Model dedicated to create book object in database.
+    It shall be used to create objects of books which are borrowed from libraries."""
     book = models.ForeignKey(MyBook, on_delete=models.CASCADE)
     borrow_date = models.DateField(default=datetime.now())
     plan_return_date = models.DateField()
     real_return_date = models.DateField(null = True)
+    returned = models.BooleanField(default=False)
 
 
 class Library(models.Model):
+    """Model dedicated to create library object in database.
+    It shall be used to create library objects from which books present in the database were borrowed."""
     books = models.ForeignKey(LibraryBooks, on_delete=models.CASCADE)
     lib_name = models.CharField(max_length=128)
 
@@ -84,6 +91,7 @@ class Library(models.Model):
 
 
 class ReadingPlanA(models.Model):
+    """Model dedicated to create reading plan object in database."""
     books = models.ManyToManyField(MyBook, through="PlanBooks", related_name='books')
     plan_name = models.CharField(max_length=64)
     details = models.TextField()
@@ -97,12 +105,16 @@ class ReadingPlanA(models.Model):
         return self.name
 
 class PlanBooks(models.Model):
+    """Model dedicated to add book objects previously added to database to
+     reading plan objects present in database."""
     reading_plan = models.ForeignKey(ReadingPlanA ,on_delete=models.CASCADE)
     book = models.ForeignKey(MyBook,  on_delete=models.CASCADE)
     is_read = models.BooleanField()
 
     
 class BooksToBuy(models.Model):
+    """Model dedicated to create book object in database.
+    It shall be used to create objects of books that the user intends to buy."""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=128)
     author = models.CharField(max_length=128)
@@ -113,6 +125,7 @@ class BooksToBuy(models.Model):
     swiat_ksiazki_price = models.FloatField()
     book_status = models.IntegerField(choices=STATUS_BUY, default=2)
     book_shop = models.IntegerField(choices=SHOP, default=1)
+    book_price = models.FloatField(default=0)
 
     @property
     def name(self):

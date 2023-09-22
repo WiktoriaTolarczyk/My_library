@@ -32,7 +32,17 @@ from biblioteka.views import (
     ReadingPlanAddView,
     AddBookToPlanView,
     ReadingPlanDetailView,
-    AddBookToBuyView
+    AddBookToBuyView,
+    DeleteBookBuy,
+    MoveToBuyShopView,
+    DeleteBookMyBook,
+    ProlongBookView,
+    ReturnBookView,
+    PlanListView,
+    BookDetailView,
+    DeleteFromPlanView,
+    MoveToReadStatePlanView,
+    DeleteBookMyBookMainDBView
 
 )
 
@@ -54,4 +64,14 @@ urlpatterns = [
     path('plan/add_book', AddBookToPlanView.as_view(), name='add-book-plan'),
     path('plan/<int:id>', ReadingPlanDetailView.as_view(), name='plan-detail'),
     path('add_book_buy', AddBookToBuyView.as_view(), name='add-book-buy'),
+    path('delete_book_buy/<int:id>', DeleteBookBuy.as_view(), name='delete-buy'),
+    path('move_to_bought/<int:id>', MoveToBuyShopView.as_view(), name='book-bought'),
+    path('delete_book/<int:id>', DeleteBookMyBook.as_view(), name='delete-book'),
+    path('prolong/<int:id>', ProlongBookView.as_view(), name='prolong-book'),
+    path('return_book/<int:id>', ReturnBookView.as_view(), name='return-book'),
+    path('plan_list/', PlanListView.as_view(), name='plan-list'),
+    path('book_detail/<int:id>', BookDetailView.as_view(), name='book-detail'),
+    path('plan/<int:id_plan>/<int:id_book>', DeleteFromPlanView.as_view(), name='delete-from-plan'),
+    path('plan_delete/<int:id_plan>/<int:id_book>', MoveToReadStatePlanView.as_view(), name='move-to-read'),
+    path('book_delete/<int:id>', DeleteBookMyBookMainDBView.as_view(), name='delete-book-mybook')
 ]
