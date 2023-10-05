@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render, redirect, HttpResponse
 from django.views import View
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse_lazy
@@ -731,3 +731,62 @@ class DeleteBookMyBookMainDBView(View):
             "message": message
         }
         return render(request, 'delete_Mybook.html', context=context)
+    
+class EditBookView(View):
+    def get(self, request, id):
+        message=None
+        book_count = MyBook.objects.count()
+        # if id in [i for i in range(1, book_count + 1)]:
+        book = MyBook.objects.get(id=id)
+        status = None
+        if book.status == 1:
+            status = "Nieprzeczytana"
+        elif book.status == 2:
+            status = "W trakcie czytania"
+        else:
+            status = "Przeczytana"
+        context = {
+            'book': book,
+            'message' : message,
+            'status' : status
+        }
+        return render(request, "edit_book_detail.html", context=context)
+        # else:
+        #     return HttpResponseNotFound("Nie ma takiej książki w bazie danych :(")
+    def post(self, request, id):
+        publisher = request.POST.get("publisher")
+        status = request.POST.get("status")
+        if status == "Nieprzeczytana":
+            status = 1
+        elif book.status == "W trakcie czytania":
+            status = 2
+        else:
+            status = 3
+        date_of_buy = request.POST.get("date_of_buy")
+        rating = request.POST.get("rating")
+        review = request.POST.get("resume")
+        if publisher and status and date_of_buy and rating and review:
+            book = MyBook.objects.get(id=id)
+            book.publisher = publisher
+            book.date_of_buy = date_of_buy
+            book.status = status
+            book.rating = rating
+            book.review = review
+            book.save()
+            return redirect('book-detail', id=book.id)
+        else:
+            book = MyBook.objects.get(id=id)
+            massage = "Wypełnij dokładnie wszystkie pola!"
+            status = None
+            if book.status == 1:
+                status = "Nieprzeczytana"
+            elif book.status == 2:
+                status = "W trakcie czytania"
+            else:
+                status = "Przeczytana"
+            context = {
+                'book': book,
+                'message' : massage,
+                'status' : status
+            }
+            return render(request, "edit_book_detail.html", context=context)

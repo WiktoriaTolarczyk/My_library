@@ -38,7 +38,7 @@
                                class="btn btn-danger rounded-0 text-light m-1">Usuń</a>
                             <a href="{% url 'book-detail' id=book.id %}"
                                class="btn btn-info rounded-0 text-light m-1">Szczegóły</a>
-                            <a href="//"
+                            <a href="{% url 'edit-book' id=book.id%}"
                                class="btn btn-warning rounded-0 text-light m-1">Edytuj</a>
                         </td>
                     </tr>
