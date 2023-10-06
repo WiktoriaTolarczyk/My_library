@@ -17,7 +17,7 @@ There are also sections related to:
 
 It is strongly recommended to look at working_app gif at the beginning to have an initial look at the main functionality of the application!
 
-![Default Home View](https://raw.github.com/WiktoriaTolarczyk/My_library/blob/main/__screenshots/db_settings.png)
+![Home View](/__screenshots/main_view?raw=true "Main View")
 
 
 # Usage
@@ -71,7 +71,7 @@ Install project dependencies:
 
 Set default database in MyLibraryApp/settings.py:
 
-![Default DB Settings](https://raw.github.com/WiktoriaTolarczyk/My_library/blob/main/__screenshots/main_view.png)
+![Default DB Settings](/__screenshots/db_settings?raw=true "Database settings")
     
     
 Then simply apply the migrations:
