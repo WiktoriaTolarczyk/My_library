@@ -18,6 +18,13 @@ There are also sections related to:
 
 ![Home View](working_app.gif?raw=true "Main View")
 
+## Technologies
+- Django 4.2.4
+- Python 3 or 3.8
+- HTML 5
+- Jinja2
+- Bootstrap
+
 
 # Usage
 
