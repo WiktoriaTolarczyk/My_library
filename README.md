@@ -24,6 +24,7 @@ There are also sections related to:
 - HTML 5
 - Jinja2
 - Bootstrap
+- PostgreSQL
 
 
 # Usage
