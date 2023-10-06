@@ -1,4 +1,3 @@
-{% if False %}
 
 # Introduction
 
@@ -18,7 +17,7 @@ There are also sections related to:
 
 It is strongly recommended to look at working_app gif at the beginning to have an initial look at the main functionality of the application!
 
-![Default Home View](__screenshots/main_view.png?raw=true "Main View")
+![Default Home View](https://raw.github.com/WiktoriaTolarczyk/My_library/blob/main/__screenshots/db_settings.png)
 
 
 # Usage
@@ -53,11 +52,10 @@ And then:
       
 After that just install the local dependencies, run migrations, and start the server.
 
-{% endif %}
 
 # My_library
 
-# Getting Started
+## Getting Started
 
 First clone the repository from Github and switch to the new directory:
 
@@ -73,7 +71,7 @@ Install project dependencies:
 
 Set default database in MyLibraryApp/settings.py:
 
-![Default DB Settings](__screenshots/db_settings.png?raw=true "DB settings")
+![Default DB Settings](https://raw.github.com/WiktoriaTolarczyk/My_library/blob/main/__screenshots/main_view.png)
     
     
 Then simply apply the migrations:
