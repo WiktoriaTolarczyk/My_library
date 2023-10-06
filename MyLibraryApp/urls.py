@@ -43,7 +43,9 @@ from biblioteka.views import (
     DeleteFromPlanView,
     MoveToReadStatePlanView,
     DeleteBookMyBookMainDBView,
-    EditBookView
+    EditBookView,
+    PriceDetailView,
+    AddPricesView,
 
 )
 
@@ -75,5 +77,7 @@ urlpatterns = [
     path('plan/<int:id_plan>/<int:id_book>', DeleteFromPlanView.as_view(), name='delete-from-plan'),
     path('plan_delete/<int:id_plan>/<int:id_book>', MoveToReadStatePlanView.as_view(), name='move-to-read'),
     path('book_delete/<int:id>', DeleteBookMyBookMainDBView.as_view(), name='delete-book-mybook'),
-    path('edit_book/<int:id>', EditBookView.as_view(), name='edit-book')
+    path('edit_book/<int:id>', EditBookView.as_view(), name='edit-book'),
+    path('detail_price/<int:id>', PriceDetailView.as_view(), name='detail-price'),
+    path('add_prices/<int:id>', AddPricesView.as_view(), name='add-price'),
 ]

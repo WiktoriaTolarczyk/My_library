@@ -1,0 +1,64 @@
+{% extends '__base__.html' %}
+{% block title %}List of books{% endblock %}
+{% block content %}
+        <div class="row border-bottom border-3 p-1 m-1">
+            <div class="col noPadding"><h3 class="color-header text-uppercase">AKTUALIZACJA CENY</h3></div>
+            <div class="col noPadding d-flex justify-content-end mb-2"><a
+                    href="{% url 'detail-price' id=book.id %}"
+                    class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4">Lista zebranych cen</a></div>
+        </div>
+        <div class="mt-5 col-md-12">
+            Wybrałeś książkę: {{book}}
+        </div>
+        <div class="mt-5 col-md-12">
+            Aktualne dane:
+            <table class="table border-bottom schedules-content">
+                <thead>
+                <tr class="d-flex text-color-darker">
+                    <th scope="col" class="col-3">OSTATNIA AKTUALIZACJA</th>
+                    <th scope="col" class="col-2">CENA EMPIK</th>
+                    <th scope="col" class="col-2">CENA TANIA KSIĄŻKA</th>
+                    <th scope="col" class="col-2">CENA ŚWIAT KSIĄŻKI</th>
+                </tr>
+                </thead>
+                    <tbody class="text-color-lighter">
+                        <tr class="d-flex">
+                            <td class="col-3">
+                                {{book.update_date}}
+                            </td>
+                            <td class="col-2">
+                                {{book.empik_price}}
+                            </td>
+                            <td class="col-2">
+                                {{book.tania_ksiazka_price}}
+                            </td>
+                            <td class="col-2">
+                                {{book.swiat_ksiazki_price}}
+                            </td>
+                        </tr>
+
+                    </tbody>
+            </table>
+        </div>
+        <table class="table border-bottom schedules-content">
+            <tbody class="text-color-lighter">
+            <tr>
+                <td class="center">
+                    <form action="{% url 'add-price' id=book.id %}" method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <input type="submit" value="Dodaj daty">
+                    </form>
+                </td>
+            </tr>
+            <!-- <tr>
+                <td class="col-7 center">
+                    <p>{{message}}</p>
+                </td>
+
+            </tr> -->
+            </tbody>
+        </table>
+
+
+{% endblock %}

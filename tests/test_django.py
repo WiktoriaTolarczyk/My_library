@@ -1,5 +1,5 @@
 import pytest
-from biblioteka.models import MyBook, BooksToBuy, Library, LibraryBooks, MONTHS, get_author_rate, ReadingPlanA, PlanBooks
+from biblioteka.models import MyBook, BooksToBuy, Library, LibraryBooks, MONTHS, ReadingPlanA, PlanBooks
 from biblioteka.forms import AddBookForm
 from django.test import Client
 from django.urls import reverse

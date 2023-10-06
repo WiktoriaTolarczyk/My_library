@@ -130,18 +130,16 @@
                         {% endfor %}
                     {% endif %}
                     {% if from_shop %}
-                        {% for buy in from_shop %}
-                            <tbody class="text-color-lighter">
-                                <tr class="d-flex">
-                                    <td class="col-5">
-                                        Koszt:
-                                    </td>
-                                    <td class="col-7">
-                                        {{buy.book_price}} zł
-                                    </td>
-                                </tr>
-                            </tbody>
-                        {% endfor %}
+                        <tbody class="text-color-lighter">
+                            <tr class="d-flex">
+                                <td class="col-5">
+                                    Koszt:
+                                </td>
+                                <td class="col-7">
+                                    {{buy.book_price}} zł
+                                </td>
+                            </tr>
+                        </tbody>
                     {% endif %}
             </table>
         </div>

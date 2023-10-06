@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse_lazy
 from datetime import datetime, timedelta
+from django.utils.timezone import now
 from .models import MyBook, BooksToBuy, Library, LibraryBooks, MONTHS, ReadingPlanA, PlanBooks
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import (
@@ -18,6 +19,7 @@ from .forms import (
     AddBookToBuy,
     ChooseShopForm,
     PostponeReturnForm,
+    AddPricesForm,
 )
 
 # Create your views here.
@@ -166,7 +168,7 @@ class ShoppingListView(View):
         Books presented here are created via BooksToBuy model presented in models.py dedicated file."""
     def get(self, request):
         """Function to handle display-books_to_buy-list's request with get method"""
-        books = BooksToBuy.objects.filter(book_status=2).order_by('title')
+        books = BooksToBuy.objects.filter(book_status=2).order_by('title').distinct('title')
         paginator = Paginator(books, 50)
         page = request.GET.get('page')
         books = paginator.get_page(page)
@@ -232,9 +234,11 @@ class AddLibBookView(View):
             lib_name = form.cleaned_data['lib_name']
 
 
-            library = Library.objects.filter(lib_name=lib_name)[0]
+            library = Library.objects.filter(lib_name=lib_name)
             if not library:
                 library = None
+            else:
+                library = library[0]
             if library is not None:
                 library = Library.objects.create(books=libBook, lib_name=lib_name)
                 mass = 'Biblioteka użytkownika istnieje już w bazie danych, obiekt został dodany'
@@ -262,13 +266,14 @@ class RankingView(View):
         rating = []
         for book in books_:
             rating.append(float(str(book.rating).replace(',','.')))
+        ratings = [i.rating for i in books_]
         paginator = Paginator(books, 10)
         page = request.GET.get('page')
         books = paginator.get_page(page)
         ctx = {
             "books": books,
             "books_": books_,
-            "ratings": rating,
+            "ratings": ratings,
         }
         return render(request, 'rating.html', context=ctx)
     
@@ -449,8 +454,9 @@ class DeleteBookBuy(View):
         Parameters:
         id (int): id number (from database) of chosen book"""
         book = BooksToBuy.objects.get(id=id)
+        books = BooksToBuy.objects.filter(title=book.title, author = book.title)
         name = book.title
-        book.delete()
+        books.delete()
         message = f'Ksiażka: {name} została usunięta z bazy danych.'
         context = {
             "message": message
@@ -466,12 +472,14 @@ class MoveToBuyShopView(View):
 
         Parameters:
         id (int): id number (from database) of chosen book"""
+        today = now().date()
         book = BooksToBuy.objects.get(id=id)
+        books = BooksToBuy.objects.filter(title=book.title, author=book.author, update_date__lte=today).order_by('update_date').reverse()[0]
         form = ChooseShopForm()
         shops = {
-            'Empik': book.empik_price,
-            'Tania ksiażka': book.tania_ksiazka_price,
-            'Świat książki': book.swiat_ksiazki_price
+            'Empik': books.empik_price,
+            'Tania ksiażka': books.tania_ksiazka_price,
+            'Świat książki': books.swiat_ksiazki_price
         }
         shopss = [(key, shops[key]) for key in shops]
         context = {
@@ -496,10 +504,18 @@ class MoveToBuyShopView(View):
                 'Świat książki': book.swiat_ksiazki_price
             }
             shopss = [(key, shops[key]) for key in shops]
-            book.book_price = price
-            book.book_shop = shop
-            book.book_status = 1
-            book.save()
+            bookss = BooksToBuy.objects.filter(title=book.title, author=book.author)
+            if  len(bookss) == 1:
+                book.book_price = price
+                book.book_shop = shop
+                book.book_status = 1
+                book.save()
+            else:
+                for elem in bookss:
+                    elem.book_price = price
+                    elem.book_shop = shop
+                    elem.book_status = 1
+                    elem.save()
             user = User.objects.get(username=request.user.username)
             book = MyBook.objects.create(user=user,
                                          title=book.title,
@@ -618,6 +634,10 @@ class BookDetailView(View):
         else:
             library = Library.objects.filter(books=is_from_library[0])
         is_bought = BooksToBuy.objects.filter(title=book.title, author=book.author, book_status=1)
+        if not is_bought:
+            is_bought = None
+        else:
+            is_bought = is_bought[0]
         status = None
         if book.status == 1:
             status = "Nieprzeczytana"
@@ -735,8 +755,6 @@ class DeleteBookMyBookMainDBView(View):
 class EditBookView(View):
     def get(self, request, id):
         message=None
-        book_count = MyBook.objects.count()
-        # if id in [i for i in range(1, book_count + 1)]:
         book = MyBook.objects.get(id=id)
         status = None
         if book.status == 1:
@@ -751,8 +769,6 @@ class EditBookView(View):
             'status' : status
         }
         return render(request, "edit_book_detail.html", context=context)
-        # else:
-        #     return HttpResponseNotFound("Nie ma takiej książki w bazie danych :(")
     def post(self, request, id):
         publisher = request.POST.get("publisher")
         status = request.POST.get("status")
@@ -790,3 +806,48 @@ class EditBookView(View):
                 'status' : status
             }
             return render(request, "edit_book_detail.html", context=context)
+        
+class AddPricesView(View):
+    def get(self, request, id):
+        """Function to handle prolong-book's request with get method
+
+        Parameters:
+        id (int): id number (from database) of chosen book"""
+        today = now().date()
+        book = BooksToBuy.objects.get(id=id)
+        books = BooksToBuy.objects.filter(title=book.title, author=book.author, update_date__lte=today).order_by('update_date').reverse()[0]
+        form = AddPricesForm()
+        context = {
+            "book": books,
+            "form": form,
+        }
+        return render(request, 'book_add_price.html', context=context)
+    def post(self, request, id):
+        """Function to handle prolong-book's request with post method
+
+        Parameters:
+        id (int): id number (from database) of chosen book"""
+        form = AddPricesForm(request.POST)
+        if form.is_valid():
+            date = form.cleaned_data['update_date']
+            empik = form.cleaned_data['empik']
+            tania_ksiazka = form.cleaned_data['tania_ksiazka']
+            swiat_ksiazki = form.cleaned_data['swiat_ksiazki']
+            book = BooksToBuy.objects.get(id=id)
+            book.pk = None
+            book.update_date = date
+            book.empik_price = empik
+            book.tania_ksiazka_price = tania_ksiazka
+            book.swiat_ksiazki_price = swiat_ksiazki
+            book.save()
+            return redirect('detail-price', id=book.id)
+        
+class PriceDetailView(View):
+    def get(self, request, id):
+        book = BooksToBuy.objects.get(id=id)
+        books = BooksToBuy.objects.filter(title = book.title, author = book.author)
+        context = {
+            "book": book,
+            "books": books,
+        }
+        return render(request, 'price_detail.html', context=context)

@@ -64,3 +64,9 @@ class ChooseShopForm(forms.Form):
 class PostponeReturnForm(forms.Form):
     """Form used to postpone return date of borrowed books."""
     return_date = forms.DateField(label="Nowa data zwrotu", initial=datetime.now()+timedelta(days=30))
+
+class AddPricesForm(forms.Form):
+    update_date = forms.DateField(label="Data aktualizacji cen", initial=datetime.now())
+    empik = forms.FloatField(label="Cena w Empiku")
+    tania_ksiazka = forms.FloatField(label="Cena w Taniej książce")
+    swiat_ksiazki = forms.FloatField(label="Cena w Świecie książki")
