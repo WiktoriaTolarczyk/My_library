@@ -3,7 +3,7 @@
 
 The main task of the application is to collect information about books that the registered user owns, has borrowed or intends to buy. 
 
-Each of these categories has its own functionality,which allows the user to select dedicated options. 
+Each of these categories has its own functionality, which allows the user to select dedicated options. 
 
 You can add items to the main catalog, which is a collection of all books that are currently in the user's possession (including books borrowed from the library), modify the corresponding data (including adding reviews, rating on a scale of 1-10), deleting or create your own reading plans, to which you can add books previously included in the collection.
 
@@ -15,9 +15,8 @@ There are also sections related to:
 -  the user's reading plans,
 -  visualization of statistical data related to user activity in the application.
 
-It is strongly recommended to look at working_app gif at the beginning to have an initial look at the main functionality of the application!
 
-![Home View](/__screenshots/main_view?raw=true "Main View")
+![Home View](working_app.gif?raw=true "Main View")
 
 
 # Usage
